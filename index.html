@@ -1,47 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ElevenLabs Embed</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElevenLabs Text-to-Speech</title>
 </head>
 <body>
-  <h1>Generador de Voz - ElevenLabs</h1>
-  <textarea id="textInput" placeholder="Escribe algo aquí..." rows="4" cols="50"></textarea>
-  <br><br>
-  <button id="generateButton">Generar Voz</button>
-  <br><br>
-  <audio id="audioPlayer" controls></audio>
+    <h1>ElevenLabs Text-to-Speech</h1>
+    <textarea id="text" rows="4" cols="50" placeholder="Enter your text here"></textarea>
+    <br>
+    <button id="synthesize">Synthesize</button>
+    <br><br>
+    <audio id="audio" controls></audio>
 
-  <script>
-    document.getElementById("generateButton").addEventListener("click", () => {
-      const apiKey = "<apiKey>"; // Reemplaza con tu clave API
-      const voiceId = "voice_id"; // Reemplaza con el ID de la voz
-      const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
-      
-      const text = document.getElementById("textInput").value;
-      if (!text) {
-        alert("Por favor, escribe algo.");
-        return;
-      }
+    <script>
+        document.getElementById('synthesize').addEventListener('click', async () => {
+            const text = document.getElementById('text').value;
+            const apiKey = 'YOUR_API_KEY'; // Reemplaza con tu API Key
+            const voiceId = 'YOUR_VOICE_ID'; // Reemplaza con el Voice ID
 
-      fetch(url, {
-        method: "POST",
-        headers: {
-          "xi-api-key": apiKey,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text }),
-      })
-      .then(response => response.blob())
-      .then(audioBlob => {
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audioPlayer = document.getElementById("audioPlayer");
-        audioPlayer.src = audioUrl;
-        audioPlayer.play();
-      })
-      .catch(error => console.error("Error:", error));
-    });
-  </script>
+            if (!text) {
+                alert('Please enter some text.');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'xi-api-key': apiKey
+                    },
+                    body: JSON.stringify({
+                        text: text
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    alert(`Error: ${error.message}`);
+                    return;
+                }
+
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                document.getElementById('audio').src = audioUrl;
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while synthesizing text.');
+            }
+        });
+    </script>
 </body>
 </html>
