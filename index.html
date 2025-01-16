@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generador de Texto a Voz</title>
+  <title>Generador de Texto a Voz - ElevenLabs</title>
 </head>
 <body>
   <h1>Generador de Texto a Voz con ElevenLabs</h1>
@@ -15,27 +15,28 @@
     document.getElementById("convertButton").addEventListener("click", function() {
       const text = document.getElementById("textToConvert").value.trim();
       
+      // Validar si el campo de texto no está vacío
       if (text === "") {
         alert("Por favor, ingresa un texto.");
         return;
       }
 
-      const voiceId = "pNInz6obpgDQGcFmaJgB"; // Reemplaza con tu propio voice_id
-      const apiKey = "sk_e9532814d53d68b9921ac94691058f794d9e4bb5f93bfd8c"; // Reemplaza con tu propia clave API
-      
-      // La URL de la API de ElevenLabs
+      // Reemplazar con tu propio voice_id y API Key
+      const voiceId = "9BWtsMINqrJLrRacOk9x"; // Tu ID de voz
+      const apiKey = "sk_XXXXXX"; // Tu clave API de ElevenLabs
+
       const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
+      
+      const data = {
+        text: text
+      };
 
-      // Datos que se enviarán en la solicitud
-      const data = { text: text };
-
-      // Configuración de la solicitud
       const headers = {
         "xi-api-key": apiKey,
         "Content-Type": "application/json"
       };
 
-      // Realizar la solicitud a la API
+      // Realizar la solicitud POST a la API
       fetch(url, {
         method: 'POST',
         headers: headers,
@@ -43,10 +44,7 @@
       })
       .then(response => response.blob())
       .then(audioBlob => {
-        // Crear un objeto URL para el archivo de audio
         const audioUrl = URL.createObjectURL(audioBlob);
-        
-        // Asignar la URL del archivo de audio al reproductor de audio
         const audioPlayer = document.getElementById("audioPlayer");
         audioPlayer.src = audioUrl;
         audioPlayer.play();
