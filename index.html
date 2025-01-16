@@ -17,7 +17,7 @@
         document.getElementById('synthesize').addEventListener('click', async () => {
             const text = document.getElementById('text').value;
             const apiKey = 'sk_623da5978f8cb5b17dbd3cdff7ad4eea8d801c1bd1a0aa7a'; // Reemplaza con tu API Key
-            const voiceId = 'Aria'; // Reemplaza con el Voice ID
+            const voiceId = '21m00Tcm4TlvDq8ikWAM'; // Reemplaza con un Voice ID válido
 
             if (!text) {
                 alert('Please enter some text.');
@@ -31,21 +31,24 @@
                         'Content-Type': 'application/json',
                         'xi-api-key': apiKey
                     },
-                    body: JSON.stringify({
-                        text: text
-                    })
+                    body: JSON.stringify({ text: text })
                 });
 
                 if (!response.ok) {
+                    // Intenta obtener un mensaje de error de la respuesta
                     const error = await response.json();
-                    alert(`Error: ${error.message}`);
+                    const errorMessage = error?.message || 'An unknown error occurred.';
+                    alert(`Error: ${errorMessage}`);
+                    console.error('API Error:', error);
                     return;
                 }
 
+                // Procesa el audio si la respuesta es correcta
                 const audioBlob = await response.blob();
                 const audioUrl = URL.createObjectURL(audioBlob);
                 document.getElementById('audio').src = audioUrl;
             } catch (error) {
+                // Captura errores en la conexión u otros problemas
                 console.error('Error:', error);
                 alert('An error occurred while synthesizing text.');
             }
