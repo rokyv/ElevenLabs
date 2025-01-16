@@ -13,7 +13,13 @@
 
   <script>
     document.getElementById("convertButton").addEventListener("click", function() {
-      const text = document.getElementById("textToConvert").value;
+      const text = document.getElementById("textToConvert").value.trim();
+      
+      if (text === "") {
+        alert("Por favor, ingresa un texto.");
+        return;
+      }
+
       const voiceId = "pNInz6obpgDQGcFmaJgB"; // Reemplaza con tu propio voice_id
       const apiKey = "sk_e9532814d53d68b9921ac94691058f794d9e4bb5f93bfd8c"; // Reemplaza con tu propia clave API
       
@@ -21,9 +27,7 @@
       const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
 
       // Datos que se enviarán en la solicitud
-      const data = {
-        text: text
-      };
+      const data = { text: text };
 
       // Configuración de la solicitud
       const headers = {
