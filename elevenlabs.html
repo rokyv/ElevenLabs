@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ElevenLabs Embed</title>
+</head>
+<body>
+  <h1>Generador de Voz - ElevenLabs</h1>
+  <textarea id="textInput" placeholder="Escribe algo aquí..." rows="4" cols="50"></textarea>
+  <br><br>
+  <button id="generateButton">Generar Voz</button>
+  <br><br>
+  <audio id="audioPlayer" controls></audio>
+
+  <script>
+    document.getElementById("generateButton").addEventListener("click", () => {
+      const apiKey = "<apiKey>"; // Reemplaza con tu clave API
+      const voiceId = "voice_id"; // Reemplaza con el ID de la voz
+      const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
+      
+      const text = document.getElementById("textInput").value;
+      if (!text) {
+        alert("Por favor, escribe algo.");
+        return;
+      }
+
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "xi-api-key": apiKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      })
+      .then(response => response.blob())
+      .then(audioBlob => {
+        const audioUrl = URL.createObjectURL(audioBlob);
+        const audioPlayer = document.getElementById("audioPlayer");
+        audioPlayer.src = audioUrl;
+        audioPlayer.play();
+      })
+      .catch(error => console.error("Error:", error));
+    });
+  </script>
+</body>
+</html>
